@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RESTO TM - Гид по ресторанам Туркменистана</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #D4AF37;
+            --secondary: #2C3E50;
+            --accent: #E74C3C;
+            --bg: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text: #2C3E50;
+            --text-light: #7F8C8D;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --header-height: 200px;
+            --header-height-scrolled: 60px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-top: calc(var(--header-height) + 60px);
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--secondary) 0%, #1a252f 100%);
+            color: white;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            height: var(--header-height);
+            overflow: hidden;
+        }
+
+        header.scrolled {
+            height: var(--header-height-scrolled);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        header.scrolled::before {
+            opacity: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 4px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            transform-origin: center;
+        }
+
+        header.scrolled .logo {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: white;
+            font-size: 1.1rem;
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            letter-spacing: 6px;
+            margin-top: 8px;
+            text-transform: uppercase;
+            opacity: 1;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+
+        header.scrolled .logo span {
+            opacity: 0;
+            transform: translateY(-20px);
+            height: 0;
+            margin: 0;
+        }
+
+        nav {
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        header.scrolled + nav {
+            top: var(--header-height-scrolled);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled + nav .nav-content {
+            padding: 0.5rem 0;
+        }
+
+        .nav-btn {
+            background: none;
+            border: 2px solid transparent;
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        header.scrolled + nav .nav-btn {
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: rgba(212,175,55,0.1);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 20px;
+            min-height: 60vh;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            color: var(--secondary);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            margin: 0.8rem auto 0;
+            border-radius: 2px;
+        }
+
+        .restaurants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .restaurant-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .restaurant-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .restaurant-card:hover .restaurant-image {
+            transform: scale(1.1);
+        }
+
+        .restaurant-content {
+            padding: 1.5rem;
+        }
+
+        .restaurant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .restaurant-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .restaurant-category {
+            display: inline-block;
+            background: rgba(212,175,55,0.15);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .restaurant-description {
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .restaurant-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .rating {
+            display: flex;
+            gap: 0.2rem;
+        }
+
+        .star {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .price-range {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--accent);
+            color: white;
+            transform: rotate(90deg);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-header {
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 2rem;
+            color: var(--text-light);
+            flex-wrap: wrap;
+        }
+
+        .modal-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .menu-section {
+            margin-top: 2rem;
+        }
+
+        .menu-title {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .menu-item {
+            background: var(--bg);
+            padding: 1rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .menu-item:hover {
+            border-color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .menu-item-name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .menu-item-price {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .contact-section {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, #1a252f 100%);
+            border-radius: 16px;
+            color: white;
+            text-align: center;
+        }
+
+        .phone-btn {
+            background: var(--primary);
+            color: var(--secondary);
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.4);
+        }
+
+        .phone-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(212,175,55,0.6);
+        }
+
+        .phone-display {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .phone-display.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            grid-column: 1 / -1;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+        }
+
+        .error-message button {
+            margin-top: 1rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        footer {
+            background: var(--secondary);
+            color: white;
+            padding: 3rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 20px;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --header-height: 160px;
+                --header-height-scrolled: 50px;
+            }
+
+            .logo {
+                font-size: 2.2rem;
+            }
+
+            header.scrolled .logo {
+                font-size: 1.2rem;
+            }
+
+            .logo span {
+                font-size: 0.9rem;
+                letter-spacing: 3px;
+            }
+
+            .restaurants-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-content {
+                gap: 0.3rem;
+            }
+
+            .nav-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .modal-image {
+                height: 250px;
+            }
+
+            .modal-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="mainHeader">
+        <div class="header-container">
+            <div class="logo">
+                RESTO TM
+                <span>Гид по ресторанам Туркменистана</span>
+            </div>
+        </div>
+    </header>
+
+    <nav id="mainNav">
+        <div class="nav-container">
+            <div class="nav-content">
+                <button class="nav-btn active" onclick="filterRestaurants('all')">Все</button>
+                <button class="nav-btn" onclick="filterRestaurants('traditional')">Традиционная</button>
+                <button class="nav-btn" onclick="filterRestaurants('european')">Европейская</button>
+                <button class="nav-btn" onclick="filterRestaurants('asian')">Азиатская</button>
+                <button class="nav-btn" onclick="filterRestaurants('cafe')">Кафе</button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <h2 class="section-title">Рестораны Туркменистана</h2>
+        <div id="restaurantsList" class="restaurants-grid">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>Загрузка ресторанов...</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="restaurantModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-body">
+                <div class="modal-header">
+                    <h2 id="modalTitle" class="modal-title"></h2>
+                    <div class="modal-meta">
+                        <span class="modal-meta-item" id="modalCategory"></span>
+                        <span class="modal-meta-item" id="modalRating"></span>
+                    </div>
+                </div>
+                <p id="modalDescription" style="color: var(--text-light); line-height: 1.8; font-size: 1.1rem;"></p>
+                
+                <div class="menu-section">
+                    <h3 class="menu-title">🍽️ Меню</h3>
+                    <div id="modalMenu" class="menu-grid"></div>
+                </div>
+
+                <div class="contact-section">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Связаться с рестораном</h3>
+                    <p style="opacity: 0.9;">Нажмите кнопку ниже, чтобы увидеть номер телефона</p>
+                    <button class="phone-btn" onclick="showPhone()">
+                        📞 Позвонить
+                    </button>
+                    <div id="phoneDisplay" class="phone-display"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>RESTO TM</h4>
+                <p>Самый полный гид по ресторанам Туркменистана.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Контакты</h4>
+                <p>Email: info@restotm.com</p>
+                <p>Тел: +993 12 34 56 78</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 RESTO TM. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <script>
+        // ==========================================
+        // ЗДЕСЬ ДОБАВЛЯЙТЕ СВОИ РЕСТОРАНЫ
+        // ==========================================
+        const MY_RESTAURANTS = [
+            // Пример 1 (замените на свой ресторан)
+            {
+                id: 1,
+                name: "НАЗВАНИЕ РЕСТОРАНА 1",
+                category: "traditional", // traditional, european, asian, cafe
+                description: "Описание вашего ресторана. Можно несколько предложений.",
+                image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800", // Замените на URL своего фото
+                rating: 5, // от 1 до 5
+                price: "₽₽₽", // ₽ - дешево, ₽₽₽₽ - дорого
+                phone: "+993 XX XX XX XX", // Номер телефона
+                menu: [
+                    { name: "Название блюда 1", price: "XX TMT" },
+                    { name: "Название блюда 2", price: "XX TMT" },
+                    { name: "Название блюда 3", price: "XX TMT" }
+                ]
+            },
+            
+            // Пример 2 (скопируйте этот блок для нового ресторана)
+            {
+                id: 2,
+                name: "НАЗВАНИЕ РЕСТОРАНА 2",
+                category: "european",
+                description: "Описание ресторана.",
+                image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800",
+                rating: 4,
+                price: "₽₽₽₽",
+                phone: "+993 XX XX XX XX",
+                menu: [
+                    { name: "Блюдо 1", price: "XX TMT" },
+                    { name: "Блюдо 2", price: "XX TMT" }
+                ]
+            }
+            
+            // Добавьте больше ресторанов, скопировав блок выше и меняя id (3, 4, 5...)
+        ];
+
+        // ==========================================
+        // ДАЛЬШЕ НЕ ТРОГАЙТЕ
+        // ==========================================
+        let restaurants = [];
+        let currentFilter = 'all';
+        let currentRestaurant = null;
+        let lastScrollY = 0;
+        let ticking = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            restaurants = MY_RESTAURANTS;
+            renderRestaurants();
+            initScrollEffect();
+        });
+
+        function initScrollEffect() {
+            const header = document.getElementById('mainHeader');
+            
+            window.addEventListener('scroll', () => {
+                lastScrollY = window.scrollY;
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        if (lastScrollY > 50) {
+                            header.classList.add('scrolled');
+                        } else {
+                            header.classList.remove('scrolled');
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
+
+        function renderRestaurants() {
+            const container = document.getElementById('restaurantsList');
+            const filtered = currentFilter === 'all' 
+                ? restaurants 
+                : restaurants.filter(r => r.category === currentFilter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 3rem; color: var(--text-light); grid-column: 1/-1;">Нет ресторанов в этой категории</div>';
+                return;
+            }
+
+            container.innerHTML = filtered.map(restaurant => `
+                <div class="restaurant-card" onclick="openRestaurant(${restaurant.id})">
+                    <img src="${restaurant.image}" alt="${restaurant.name}" class="restaurant-image" loading="lazy">
+                    <div class="restaurant-content">
+                        <div class="restaurant-header">
+                            <div>
+                                <h3 class="restaurant-name">${restaurant.name}</h3>
+                                <span class="restaurant-category">${getCategoryName(restaurant.category)}</span>
+                            </div>
+                        </div>
+                        <p class="restaurant-description">${restaurant.description}</p>
+                        <div class="restaurant-footer">
+                            <div class="rating">
+                                ${'★'.repeat(restaurant.rating)}${'☆'.repeat(5-restaurant.rating)}
+                            </div>
+                            <span class="price-range">${restaurant.price}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getCategoryName(cat) {
+            const names = {
+                'traditional': 'Традиционная',
+                'european': 'Европейская',
+                'asian': 'Азиатская',
+                'cafe': 'Кафе',
+                'italian': 'Итальянская',
+                'japanese': 'Японская',
+                'fastfood': 'Фастфуд'
+            };
+            return names[cat] || cat;
+        }
+
+        function filterRestaurants(category) {
+            currentFilter = category;
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderRestaurants();
+            
+            const main = document.querySelector('main');
+            const offset = document.getElementById('mainHeader').offsetHeight + document.getElementById('mainNav').offsetHeight;
+            window.scrollTo({
+                top: main.offsetTop - offset - 20,
+                behavior: 'smooth'
+            });
+        }
+
+        function openRestaurant(id) {
+            currentRestaurant = restaurants.find(r => r.id === id);
+            if (!currentRestaurant) return;
+            
+            document.getElementById('modalImage').src = currentRestaurant.image;
+            document.getElementById('modalTitle').textContent = currentRestaurant.name;
+            document.getElementById('modalCategory').textContent = '🍽️ ' + getCategoryName(currentRestaurant.category);
+            document.getElementById('modalRating').textContent = '⭐ ' + currentRestaurant.rating + '/5';
+            document.getElementById('modalDescription').textContent = currentRestaurant.description;
+            
+            const menuContainer = document.getElementById('modalMenu');
+            if (currentRestaurant.menu && currentRestaurant.menu.length > 0) {
+                menuContainer.innerHTML = currentRestaurant.menu.map(item => `
+                    <div class="menu-item">
+                        <span class="menu-item-name">${item.name}</span>
+                        <span class="menu-item-price">${item.price}</span>
+                    </div>
+                `).join('');
+            } else {
+                menuContainer.innerHTML = '<p style="color: var(--text-light);">Меню пока не добавлено</p>';
+            }
+            
+            document.getElementById('phoneDisplay').classList.remove('show');
+            document.getElementById('phoneDisplay').textContent = '';
+            
+            const modal = document.getElementById('restaurantModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) {
+            if (!event || event.target === document.getElementById('restaurantModal') || event.target.classList.contains('modal-close')) {
+                const modal = document.getElementById('restaurantModal');
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+                currentRestaurant = null;
+            }
+        }
+
+        function showPhone() {
+            if (!currentRestaurant) return;
+            const display = document.getElementById('phoneDisplay');
+            display.textContent = currentRestaurant.phone;
+            display.classList.add('show');
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(currentRestaurant.phone);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+</body>
+</html>
