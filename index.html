@@ -849,39 +849,38 @@ async function trackSiteVisit() {
             });
         }
 
-        // МОДАЛЬНОЕ ОКНО
-        async function openRestaurant(id) {
-            currentRestaurant = restaurants.find(r => r.id === id);
-            if (!currentRestaurant) return;
-            
-            // Отправляем статистику просмотра
-            await trackRestaurantView(currentRestaurant.id, currentRestaurant.name);
-            
-            document.getElementById('modalImage').src = currentRestaurant.image;
-            document.getElementById('modalTitle').textContent = currentRestaurant.name;
-            document.getElementById('modalCategory').textContent = '🍽️ ' + getCategoryName(currentRestaurant.category);
-            document.getElementById('modalRating').textContent = '⭐ ' + (currentRestaurant.rating || 5) + '/5';
-            document.getElementById('modalDescription').textContent = currentRestaurant.description;
-            
-            const menuContainer = document.getElementById('modalMenu');
-            if (currentRestaurant.menu && currentRestaurant.menu.length > 0) {
-                menuContainer.innerHTML = currentRestaurant.menu.map(item => `
-                    <div class="menu-item">
-                        <span class="menu-item-name">${item.name}</span>
-                        <span class="menu-item-price">${item.price}</span>
-                    </div>
-                `).join('');
-            } else {
-                menuContainer.innerHTML = '<p style="color: var(--text-light);">Меню пока не добавлено</p>';
-            }
-            
-            document.getElementById('phoneDisplay').classList.remove('show');
-            document.getElementById('phoneDisplay').textContent = '';
-            
-            const modal = document.getElementById('restaurantModal');
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+        // ==========================================
+// МОДАЛЬНОЕ ОКНО
+// ==========================================
+function openRestaurant(id) {
+    currentRestaurant = restaurants.find(r => r.id === id);
+    if (!currentRestaurant) return;
+    
+    document.getElementById('modalImage').src = currentRestaurant.image;
+    document.getElementById('modalTitle').textContent = currentRestaurant.name;
+    document.getElementById('modalCategory').textContent = '🍽️ ' + getCategoryName(currentRestaurant.category);
+    document.getElementById('modalRating').textContent = '⭐ ' + (currentRestaurant.rating || 5) + '/5';
+    document.getElementById('modalDescription').textContent = currentRestaurant.description;
+    
+    const menuContainer = document.getElementById('modalMenu');
+    if (currentRestaurant.menu && currentRestaurant.menu.length > 0) {
+        menuContainer.innerHTML = currentRestaurant.menu.map(item => `
+            <div class="menu-item">
+                <span class="menu-item-name">${item.name}</span>
+                <span class="menu-item-price">${item.price}</span>
+            </div>
+        `).join('');
+    } else {
+        menuContainer.innerHTML = '<p style="color: var(--text-light);">Меню пока не добавлено</p>';
+    }
+    
+    document.getElementById('phoneDisplay').classList.remove('show');
+    document.getElementById('phoneDisplay').textContent = '';
+    
+    const modal = document.getElementById('restaurantModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
         function closeModal(event) {
             if (!event || event.target === document.getElementById('restaurantModal') || event.target.classList.contains('modal-close')) {
