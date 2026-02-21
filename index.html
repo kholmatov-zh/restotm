@@ -1,3 +1,4 @@
+<!-- This code was written by Jasur Kholmatov for the "RESTO TM" project. -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -611,7 +612,7 @@
             .modal-image {
                 height: 250px;
             }
-
+            
             .modal-title {
                 font-size: 1.8rem;
             }
@@ -689,12 +690,12 @@
             </div>
             <div class="footer-section">
                 <h4>Контакты</h4>
-                <p>Email: info@restotm.com</p>
+                <p>Email: radjapowdilnur@gmail.com</p>
                 <p>Тел: +993 12 34 56 78</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 RESTO TM. Все права защищены.</p>
+            <p>&copy; 2026 RESTO TM. Все права защищены.</p>
         </div>
     </footer>
 
@@ -712,24 +713,15 @@
         let currentRestaurant = null;
         let lastScrollY = 0;
         let ticking = false;
-
-        // ==========================================
         // ИНИЦИАЛИЗАЦИЯ
-        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             initScrollEffect();
             trackSiteVisit();
         });
 
-        // ==========================================
-        // СТАТИСТИКА (КАЖДОЕ ДЕЙСТВИЕ СЧИТАЕТСЯ)
-        // ==========================================
 
-        // ==========================================
 // ТОЛЬКО ПОСЕЩЕНИЯ САЙТА
-// ==========================================
-
 async function trackSiteVisit() {
     const now = new Date();
     
@@ -752,9 +744,7 @@ async function trackSiteVisit() {
     }
 }
 
-        // ==========================================
         // ЗАГРУЗКА ДАННЫХ
-        // ==========================================
         async function loadData() {
             try {
                 const response = await fetch(CONFIG.SHEETS_API_URL);
@@ -778,9 +768,7 @@ async function trackSiteVisit() {
             `;
         }
 
-        // ==========================================
         // ЭФФЕКТ СКРОЛЛА
-        // ==========================================
         function initScrollEffect() {
             const header = document.getElementById('mainHeader');
             
@@ -800,9 +788,7 @@ async function trackSiteVisit() {
             }, { passive: true });
         }
 
-        // ==========================================
         // РЕНДЕРИНГ
-        // ==========================================
         function renderRestaurants() {
             const container = document.getElementById('restaurantsList');
             const filtered = currentFilter === 'all' 
@@ -863,9 +849,7 @@ async function trackSiteVisit() {
             });
         }
 
-        // ==========================================
         // МОДАЛЬНОЕ ОКНО
-        // ==========================================
         async function openRestaurant(id) {
             currentRestaurant = restaurants.find(r => r.id === id);
             if (!currentRestaurant) return;
