@@ -703,7 +703,7 @@
         // КОНФИГУРАЦИЯ - ВАШ URL
         // ==========================================
         const CONFIG = {
-            SHEETS_API_URL: 'https://script.google.com/macros/s/AKfycbzuhCUR-ailpnj-EEFl2jCG-X0jcfg_Y5o96_9Ybq0h3lVnrG2tpEHJV9m0shYcNd3M/exec',
+            SHEETS_API_URL: 'https://script.google.com/macros/s/AKfycbwM2FsAIslqRpl7gX7OgKhPK02NcwNkzXheearXDfa43TXJsN_DredsA2FB_fflU4gA/exec',
             DEMO_MODE: false
         };
 
@@ -726,55 +726,31 @@
         // СТАТИСТИКА (КАЖДОЕ ДЕЙСТВИЕ СЧИТАЕТСЯ)
         // ==========================================
 
-        // Отслеживание посещения сайта (каждое посещение)
-        async function trackSiteVisit() {
-            const now = new Date();
-            const month = now.getMonth() + 1;
-            const year = now.getFullYear();
-            
-            try {
-                await fetch(CONFIG.SHEETS_API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        type: 'site_visit',
-                        month: month,
-                        year: year
-                    })
-                });
-            } catch (e) {
-                // Игнорируем ошибки CORS
-            }
-        }
+        // ==========================================
+// ТОЛЬКО ПОСЕЩЕНИЯ САЙТА
+// ==========================================
 
-        // Отслеживание просмотра ресторана (каждый клик)
-        async function trackRestaurantView(restaurantId, restaurantName) {
-            const now = new Date();
-            const month = now.getMonth() + 1;
-            const year = now.getFullYear();
-            
-            try {
-                await fetch(CONFIG.SHEETS_API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        type: 'restaurant_view',
-                        restaurantId: restaurantId,
-                        restaurantName: restaurantName,
-                        month: month,
-                        year: year
-                    })
-                });
-            } catch (e) {
-                // Игнорируем ошибки CORS
-            }
-        }
+async function trackSiteVisit() {
+    const now = new Date();
+    
+    try {
+        await fetch(CONFIG.SHEETS_API_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: 'site_visit',
+                month: now.getMonth() + 1,
+                year: now.getFullYear()
+            })
+        });
+        console.log('Отправлено:', now.getMonth() + 1, now.getFullYear());
+    } catch (e) {
+        console.log('Ошибка');
+    }
+}
 
         // ==========================================
         // ЗАГРУЗКА ДАННЫХ
