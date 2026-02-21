@@ -689,19 +689,21 @@
             </div>
             <div class="footer-section">
                 <h4>Контакты</h4>
-                <p>Email: dilnurjadjapow@gmail.com</p>
+                <p>Email: info@restotm.com</p>
                 <p>Тел: +993 12 34 56 78</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 RESTO TM. Все права защищены.</p>
+            <p>&copy; 2024 RESTO TM. Все права защищены.</p>
         </div>
     </footer>
 
     <script>
-        // КОНФИГУРАЦИЯ -  URL
+        // ==========================================
+        // КОНФИГУРАЦИЯ - ВАШ URL
+        // ==========================================
         const CONFIG = {
-            SHEETS_API_URL: 'https://script.google.com/macros/s/AKfycbxDmuNo0KSRTSAWin5Rh8pYMoIcVFY7xi1-XVHpIstu5_slcgIeIxUfu6gGia8RrYBb/exec',
+            SHEETS_API_URL: 'https://script.google.com/macros/s/AKfycbwJ1WNNXgcIVh-vNoqKodfgB5cHB5NSTdIOfLtQIC1t6ew7NNJBTkjPuEbehiuEgnTq/exec',
             DEMO_MODE: false
         };
 
@@ -711,37 +713,24 @@
         let lastScrollY = 0;
         let ticking = false;
 
+        // ==========================================
         // ИНИЦИАЛИЗАЦИЯ
+        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             initScrollEffect();
             trackSiteVisit();
         });
 
-        // СТАТИСТИКА (ИСПРАВЛЕННАЯ)
-        // Получаем или создаем уникальный ID посетителя
-        function getVisitorId() {
-            let visitorId = localStorage.getItem('resto_visitor_id');
-            if (!visitorId) {
-                visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                localStorage.setItem('resto_visitor_id', visitorId);
-            }
-            return visitorId;
-        }
+        // ==========================================
+        // СТАТИСТИКА (КАЖДОЕ ДЕЙСТВИЕ СЧИТАЕТСЯ)
+        // ==========================================
 
-        // Отслеживание посещения сайта (один раз в сутки с одного устройства)
+        // Отслеживание посещения сайта (каждое посещение)
         async function trackSiteVisit() {
-            const today = new Date().toISOString().split('T')[0];
-            const visitorId = getVisitorId();
-            const storageKey = 'visit_' + today;
-            
-            // Проверяем, не записывали ли уже сегодня с этого устройства
-            if (localStorage.getItem(storageKey) === visitorId) {
-                return; // Уже записали сегодня
-            }
-            
-            // Отмечаем что записали
-            localStorage.setItem(storageKey, visitorId);
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
             
             try {
                 await fetch(CONFIG.SHEETS_API_URL, {
@@ -752,30 +741,20 @@
                     },
                     body: JSON.stringify({
                         type: 'site_visit',
-                        date: today,
-                        visitorId: visitorId,
-                        timestamp: new Date().toISOString()
+                        month: month,
+                        year: year
                     })
                 });
-                console.log('✓ Посещение записано');
             } catch (e) {
-                console.log('Ошибка записи статистики');
+                // Игнорируем ошибки CORS
             }
         }
 
-        // Отслеживание просмотра ресторана (один раз в сутки на один ресторан с одного устройства)
+        // Отслеживание просмотра ресторана (каждый клик)
         async function trackRestaurantView(restaurantId, restaurantName) {
-            const today = new Date().toISOString().split('T')[0];
-            const visitorId = getVisitorId();
-            const storageKey = 'view_' + restaurantId + '_' + today;
-            
-            // Проверяем, не смотрели ли уже сегодня этот ресторан
-            if (localStorage.getItem(storageKey) === visitorId) {
-                return; // Уже смотрели сегодня
-            }
-            
-            // Отмечаем что смотрели
-            localStorage.setItem(storageKey, visitorId);
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const year = now.getFullYear();
             
             try {
                 await fetch(CONFIG.SHEETS_API_URL, {
@@ -788,18 +767,17 @@
                         type: 'restaurant_view',
                         restaurantId: restaurantId,
                         restaurantName: restaurantName,
-                        date: today,
-                        timestamp: new Date().toISOString()
+                        month: month,
+                        year: year
                     })
                 });
-                console.log('✓ Просмотр ресторана записан');
             } catch (e) {
-                console.log('Ошибка записи просмотра');
+                // Игнорируем ошибки CORS
             }
         }
 
         // ==========================================
-        // by JasurKholmatov for project "Resto TM"
+        // ЗАГРУЗКА ДАННЫХ
         // ==========================================
         async function loadData() {
             try {
@@ -824,7 +802,9 @@
             `;
         }
 
+        // ==========================================
         // ЭФФЕКТ СКРОЛЛА
+        // ==========================================
         function initScrollEffect() {
             const header = document.getElementById('mainHeader');
             
@@ -844,7 +824,9 @@
             }, { passive: true });
         }
 
+        // ==========================================
         // РЕНДЕРИНГ
+        // ==========================================
         function renderRestaurants() {
             const container = document.getElementById('restaurantsList');
             const filtered = currentFilter === 'all' 
@@ -905,8 +887,9 @@
             });
         }
 
-       
+        // ==========================================
         // МОДАЛЬНОЕ ОКНО
+        // ==========================================
         async function openRestaurant(id) {
             currentRestaurant = restaurants.find(r => r.id === id);
             if (!currentRestaurant) return;
