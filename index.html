@@ -689,18 +689,18 @@
             </div>
             <div class="footer-section">
                 <h4>Контакты</h4>
-                <p>Email: dilnurradjapow@gmail.com</p>
+                <p>Email: info@restotm.com</p>
                 <p>Тел: +993 12 34 56 78</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2026 RESTO TM. Все права защищены.</p>
+            <p>&copy; 2024 RESTO TM. Все права защищены.</p>
         </div>
     </footer>
 
     <script>
         // ==========================================
-        // КОНФИГУРАЦИЯ - ВАШ НОВЫЙ URL
+        // КОНФИГУРАЦИЯ - ВАШ URL
         // ==========================================
         const CONFIG = {
             SHEETS_API_URL: 'https://script.google.com/macros/s/AKfycbwJ1WNNXgcIVh-vNoqKodfgB5cHB5NSTdIOfLtQIC1t6ew7NNJBTkjPuEbehiuEgnTq/exec',
@@ -723,40 +723,66 @@
         });
 
         // ==========================================
-        // СТАТИСТИКА (отправка в Google Sheets)
+        // СТАТИСТИКА (ИСПРАВЛЕННАЯ)
         // ==========================================
-        
-        // Отслеживание посещения сайта
+
+        // Получаем или создаем уникальный ID посетителя
+        function getVisitorId() {
+            let visitorId = localStorage.getItem('resto_visitor_id');
+            if (!visitorId) {
+                visitorId = 'v_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('resto_visitor_id', visitorId);
+            }
+            return visitorId;
+        }
+
+        // Отслеживание посещения сайта (один раз в сутки с одного устройства)
         async function trackSiteVisit() {
             const today = new Date().toISOString().split('T')[0];
-            const lastVisit = localStorage.getItem('lastVisitDate');
+            const visitorId = getVisitorId();
+            const storageKey = 'visit_' + today;
             
-            // Уникальное посещение (раз в день с одного устройства)
-            if (lastVisit !== today) {
-                localStorage.setItem('lastVisitDate', today);
-                
-                try {
-                    await fetch(CONFIG.SHEETS_API_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            type: 'site_visit',
-                            date: today,
-                            timestamp: new Date().toISOString()
-                        })
-                    });
-                } catch (e) {
-                    console.log('Статистика отправлена');
-                }
+            // Проверяем, не записывали ли уже сегодня с этого устройства
+            if (localStorage.getItem(storageKey) === visitorId) {
+                return; // Уже записали сегодня
+            }
+            
+            // Отмечаем что записали
+            localStorage.setItem(storageKey, visitorId);
+            
+            try {
+                await fetch(CONFIG.SHEETS_API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'site_visit',
+                        date: today,
+                        visitorId: visitorId,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                console.log('✓ Посещение записано');
+            } catch (e) {
+                console.log('Ошибка записи статистики');
             }
         }
 
-        // Отслеживание просмотра ресторана
+        // Отслеживание просмотра ресторана (один раз в сутки на один ресторан с одного устройства)
         async function trackRestaurantView(restaurantId, restaurantName) {
             const today = new Date().toISOString().split('T')[0];
+            const visitorId = getVisitorId();
+            const storageKey = 'view_' + restaurantId + '_' + today;
+            
+            // Проверяем, не смотрели ли уже сегодня этот ресторан
+            if (localStorage.getItem(storageKey) === visitorId) {
+                return; // Уже смотрели сегодня
+            }
+            
+            // Отмечаем что смотрели
+            localStorage.setItem(storageKey, visitorId);
             
             try {
                 await fetch(CONFIG.SHEETS_API_URL, {
@@ -773,8 +799,9 @@
                         timestamp: new Date().toISOString()
                     })
                 });
+                console.log('✓ Просмотр ресторана записан');
             } catch (e) {
-                console.log('Просмотр ресторана записан');
+                console.log('Ошибка записи просмотра');
             }
         }
 
