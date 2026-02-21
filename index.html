@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    //by JasurKholmatov for project "Resto TM"
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RESTO TM - Гид по ресторанам Туркменистана</title>
@@ -700,9 +699,7 @@
     </footer>
 
     <script>
-        // ==========================================
-        // КОНФИГУРАЦИЯ - ВАШ URL
-        // ==========================================
+        // КОНФИГУРАЦИЯ -  URL
         const CONFIG = {
             SHEETS_API_URL: 'https://script.google.com/macros/s/AKfycbwJ1WNNXgcIVh-vNoqKodfgB5cHB5NSTdIOfLtQIC1t6ew7NNJBTkjPuEbehiuEgnTq/exec',
             DEMO_MODE: false
@@ -714,19 +711,14 @@
         let lastScrollY = 0;
         let ticking = false;
 
-        // ==========================================
         // ИНИЦИАЛИЗАЦИЯ
-        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
             initScrollEffect();
             trackSiteVisit();
         });
 
-        // ==========================================
         // СТАТИСТИКА (ИСПРАВЛЕННАЯ)
-        // ==========================================
-
         // Получаем или создаем уникальный ID посетителя
         function getVisitorId() {
             let visitorId = localStorage.getItem('resto_visitor_id');
@@ -807,7 +799,7 @@
         }
 
         // ==========================================
-        // ЗАГРУЗКА ДАННЫХ
+        // by JasurKholmatov for project "Resto TM"
         // ==========================================
         async function loadData() {
             try {
@@ -832,9 +824,7 @@
             `;
         }
 
-        // ==========================================
         // ЭФФЕКТ СКРОЛЛА
-        // ==========================================
         function initScrollEffect() {
             const header = document.getElementById('mainHeader');
             
@@ -854,9 +844,7 @@
             }, { passive: true });
         }
 
-        // ==========================================
         // РЕНДЕРИНГ
-        // ==========================================
         function renderRestaurants() {
             const container = document.getElementById('restaurantsList');
             const filtered = currentFilter === 'all' 
@@ -917,9 +905,8 @@
             });
         }
 
-        // ==========================================
+       
         // МОДАЛЬНОЕ ОКНО
-        // ==========================================
         async function openRestaurant(id) {
             currentRestaurant = restaurants.find(r => r.id === id);
             if (!currentRestaurant) return;
